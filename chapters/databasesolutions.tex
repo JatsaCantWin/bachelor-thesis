@@ -1,0 +1,54 @@
+\chapter{Database Solutions}
+\label{ch:background}
+There are numerous distinct database solutions avialabe on the market already, each boasting their own unique characteristics and design philosophy. Generally database engines are divided into two categories:
+- SQL databases, based on a relational model, their engines implement some dialect of the SQL language.
+- NoSQL databases, a term used to describe various other database solutions, that rely on documents, graphs, key-value pairs or other structures to organize their data, rather than the relational model endorsed by SQL.
+
+Generally, the latter compromise consistency of data in favor of data avalibility and speed of data processing.
+
+%
+% Section: Der erste Abschnitt
+%
+\section{SQL}
+\label{sec:background:first_section}
+The relational database organazation model, used in SQL is designed with simplicity in mind. It organizes data into two-dimensional array structures called tables. Each table is a series of row-like records of simple data types such as an integer, a string of text or a date, although holding binary data of any kind is possible. These records must all contain the same kind of data, arranged in the same order - the word columns or fields is often used to describe single pieces of data stored in this order. Same data in different tables may be related, and thus create links between these tables, called relations.
+Another important part of relational databases is the SQL language itself. It consists of four parts:
+\begin{description}
+  \item[SQL Data Manipulation Language:] used to create and modify data.
+  \item[SQL Data Definition Language:] used to create and modify structures in which data is stored.
+  \item[SQL Data Control Language:] used to grant permission to access and modify data inside the database system.
+  \item[SQL Data Query Language:] used to read data from the system in various ways.
+\end{description}
+These languages combined together can create complex queries that can store and access data in various unique ways, satisfying the need of even the most complex database systems.
+
+%
+% Section: Der Zweite Abschnitt
+%
+\subsection{SQLite}
+\label{subsec:background:first_subsection}
+In comparison with the rest of SQL based solutions, SQLite is a very unique one, in that it doesn't come with its own engine that is constantly running and waiting for users to connect and issue queries. Rather than that, SQLite stores its data in a simple file stored on a hard drive, that can then be accessed by various SQLite compatible applications that can open, read and modify the file according to the SQL standard, and then close the file.
+
+Because of its quirks, SQLite lacks in speed of both reading and writing the data. It also allows only one application to access and modify its databases contents. Its strength however, lies in its lightness, simplicity and low resource intensivity. It acts as an excellent data storage solution for simple apps, especially on mobile devices since they can rarely afford an online only database or constant access to a database hosted on a remote network. It can also find a great deal of use in databases that act as buffers or temporary storage for other, larger systems.
+
+\subsection{PostgresSQL}
+\label{subsec:background:second_section:second_subsection}
+PostgresSQL is one of the most popular open-source implementations of the SQL paradigm \citep{worsleyPostgresSQL}. It also includes its own programming language, PL/pgSQL, used to create advanced procedures as well as to include external scripts from other languages usually not asociated with relational databases, such as Perl or Python. 
+
+PostgresSQL expands on the standard relational model of the SQL language, by introducting the concept of objects, inheritance and arrays, known from conventional programming languages. The user can now store multiple values in a single column, create child-parent relationships between tables and even create complex programs that can be invoked by SQL statements. In this so called object-relational model, tables are sometimes called objects, and columns are sometimes called properties of said objects.
+
+\section{NoSQL}
+\label{sec:background:first_section}
+
+\subsection{MongoDB}
+\label{subsec:background:first_subsection}
+MongoDB is an excellent example of the NoSQL database design paradigm, moving away from the relational database model, in favor of document-oriented one \citep{mongoDB}. Instead of rows, MongoDB introduces documents - loose collections of data representant of how modern object-oriented programmers organize their data. MongoDB databases are much more flexible and easier to add data to and expirement in, thanks to MongoDB not requiring a fixed schema for all documents inside of one data collection.
+MongoDB is also excellent for large databases that often have to be spread across several machines to be scaleable - the MongoDB engine automatically handles balancing documents across various machines in a single cluster. 
+
+MongoDB documents are ordered sets of key-value pairs, simmilar to dictionaries or maps known from conventional programming languages. These documents are represented using the JSON standard, making them very intuitive to expirenced programmers. These documents are grouped in collections, analogous to SQL's tables. 
+
+MongoDB's interface is a fully featured javascript interpreter, giving the user the flexibility of the entire JS language complete with its standard libraries. Queries, inserts, deletions and modifications to the data can be done via MongoDB's javascript compatible API.
+
+\subsection{Prometheus}
+\label{subsec:background:second_section:second_subsection}
+Prometheus is an implementation of another famous NoSQL approach - the time series database. It specificaly collects data as a series of key/value pairs and timestamps representing the time data was gathered. Usually this data, often called samples, is collected periodically from the same source. 
+Time series databases are an excellent way to store large amounts of data in a very short period of time, they store data very efficiently and help save calculation costs.
