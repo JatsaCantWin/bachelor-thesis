@@ -1,54 +1,73 @@
 \chapter{Database Solutions}
 \label{ch:background}
-There are numerous distinct database solutions avialabe on the market already, each boasting their own unique characteristics and design philosophy. Generally database engines are divided into two categories:
-- SQL databases, based on a relational model, their engines implement some dialect of the SQL language.
-- NoSQL databases, a term used to describe various other database solutions, that rely on documents, graphs, key-value pairs or other structures to organize their data, rather than the relational model endorsed by SQL.
+\par There are numerous distinct database solutions avialabe on the market already, each boasting their own unique characteristics and design philosophy. Generally database engines are divided into two categories:
+\begin{description}
+  \item[SQL databases] based on a relational model, their engines implement some dialect of the SQL language.
+  \item[NoSQL databases] a term used to describe various other database solutions, that rely on documents, graphs, key-value pairs or other structures to organize their data, rather than the relational model endorsed by SQL.
+\end{description}
 
-Generally, the latter compromise consistency of data in favor of data avalibility and speed of data processing.
+\par Generally, the latter compromise consistency of data in favor of data avalibility and speed of data processing.
 
-%
-% Section: Der erste Abschnitt
 %
 \section{SQL}
 \label{sec:background:first_section}
-The relational database organazation model, used in SQL is designed with simplicity in mind. It organizes data into two-dimensional array structures called tables. Each table is a series of row-like records of simple data types such as an integer, a string of text or a date, although holding binary data of any kind is possible. These records must all contain the same kind of data, arranged in the same order - the word columns or fields is often used to describe single pieces of data stored in this order. Same data in different tables may be related, and thus create links between these tables, called relations.
-Another important part of relational databases is the SQL language itself. It consists of four parts:
+\par Structured Query Language (SQL) is a collection of various languages used to define interaction between the user and the database engine. Initially developed in the 70s at IBM, it gained quick popularity and dominated the Relation Database Management System market.\citep{SQLHandbook} 
+\par The relational database organazation model, used in SQL organizes data into two-dimensional array structures called tables. Each table is a series of row-like records of simple data types such as an integer, a string of text or a date, although holding binary data of any kind is possible. These records must all contain the same kind of data, arranged in the same order - the word columns or fields is often used to describe single pieces of data stored in this order. Same data in different tables may be related, and thus create links between these tables, called relations.
+\par As it was mentioned earlier, the Structured Query Language is in fact composed of four different languages, each describing different kinds of interactions possible with the Database engine\citep{KreibchSQLite}:
 \begin{description}
-  \item[SQL Data Manipulation Language:] used to create and modify data.
-  \item[SQL Data Definition Language:] used to create and modify structures in which data is stored.
-  \item[SQL Data Control Language:] used to grant permission to access and modify data inside the database system.
-  \item[SQL Data Query Language:] used to read data from the system in various ways.
+  \item[SQL Data Manipulation Language] is used to create and modify data.
+  \item[SQL Data Definition Language] is used to create and modify structures in which data is stored.
+  \item[SQL Data Control Language] is used to grant permission to access and modify data inside the database system.
+  \item[SQL Data Query Language] is used to read data from the system in various ways.
 \end{description}
-These languages combined together can create complex queries that can store and access data in various unique ways, satisfying the need of even the most complex database systems.
+\par These languages combined together can create complex queries that can store and access data in various unique ways, satisfying the need of even the most complex database systems.
+\par Another important mechanism introduced in SQL is the so called "transaction". It is defined as a set of database queries, executed one after another, whose results are only implemented if all of these queries execute succesfully[SQLHANDBOOK]. These transactions should obey the principles of ACID - Atomicity, Consistency, Isolation, Durability. [ACID]
+\begin{description}
+  \item[Atomicity] means that if one of the queries that make up a transaction fails, none of the changes implemented by the rest of the transaction takes place.
+  \item[Consistency] ensures that wether or not the transaction suceedes, the database will remain in a valid and operational state.
+  \item[Isolation] of transactions, requires the data of the inbetween states of a database transaction to be completely invisble and unavialable to other transactions.
+  \item[Durability] in terms of transactions, means that after a transaction is sucessfully executed, its effect will stay in the database, even if subsequent operations fail.
+\end{description}
+\par Implementation of these properties ensures stability and consistency, often required in many database instances. The payoff, however, is the increased amount of computation needed to perform basic operations, since every operation needs to perform certain checks and data analyses in order to conform to these principles.
 
-%
-% Section: Der Zweite Abschnitt
 %
 \subsection{SQLite}
-\label{subsec:background:first_subsection}
-In comparison with the rest of SQL based solutions, SQLite is a very unique one, in that it doesn't come with its own engine that is constantly running and waiting for users to connect and issue queries. Rather than that, SQLite stores its data in a simple file stored on a hard drive, that can then be accessed by various SQLite compatible applications that can open, read and modify the file according to the SQL standard, and then close the file.
+\label{subsec:background:first_seciton:first_subsection}
+\par In comparison with the rest of SQL based solutions, SQLite is a very unique one, in that it doesn't come with its own engine that is constantly running and waiting for users to connect and issue queries. Rather than that, SQLite stores its data in a simple file stored on a hard drive, that can then be accessed by various SQLite compatible applications that can open, read and modify the file according to the SQL standard, and then close the file.
 
-Because of its quirks, SQLite lacks in speed of both reading and writing the data. It also allows only one application to access and modify its databases contents. Its strength however, lies in its lightness, simplicity and low resource intensivity. It acts as an excellent data storage solution for simple apps, especially on mobile devices since they can rarely afford an online only database or constant access to a database hosted on a remote network. It can also find a great deal of use in databases that act as buffers or temporary storage for other, larger systems.
+\par Because of its quirks, SQLite lacks in speed of both reading and writing the data. It also allows only one application to access and modify its databases contents. Its strength however, lies in its lightness, simplicity and low resource intensivity. It acts as an excellent data storage solution for simple apps, especially on mobile devices since they can rarely afford an online only database or constant access to a database hosted on a remote network. It can also find a great deal of use in databases that act as buffers or temporary storage for other, larger systems.\citep{OwensSQLite}
 
 \subsection{PostgresSQL}
-\label{subsec:background:second_section:second_subsection}
-PostgresSQL is one of the most popular open-source implementations of the SQL paradigm \citep{worsleyPostgresSQL}. It also includes its own programming language, PL/pgSQL, used to create advanced procedures as well as to include external scripts from other languages usually not asociated with relational databases, such as Perl or Python. 
+\label{subsec:background:first_section:second_subsection}
+\par PostgresSQL is one of the most popular open-source implementations of the SQL paradigm \citep{worsleyPostgresSQL}. It also includes its own programming language, PL/pgSQL, used to create advanced procedures as well as to include external scripts from other languages usually not asociated with relational databases, such as Perl or Python. 
 
-PostgresSQL expands on the standard relational model of the SQL language, by introducting the concept of objects, inheritance and arrays, known from conventional programming languages. The user can now store multiple values in a single column, create child-parent relationships between tables and even create complex programs that can be invoked by SQL statements. In this so called object-relational model, tables are sometimes called objects, and columns are sometimes called properties of said objects.
+\par PostgresSQL expands on the standard relational model of the SQL language, by introducting the concept of objects, inheritance and arrays, known from conventional programming languages. The user can now store multiple values in a single column, create child-parent relationships between tables and even create complex programs that can be invoked by SQL statements. In this so called object-relational model, tables are sometimes called objects, and columns are sometimes called properties of said objects [ACID].
 
 \section{NoSQL}
-\label{sec:background:first_section}
+\label{sec:background:second_section}
+\par As relational databases slowly developed to dominate the DBMS market, their flaws became more apparent. They are relatively easy to use and maintain, and the various languages that comprise the SQL standard allow execution of as simple or as complex operations as the user needs. 
+\par The above mentioned transaction mechanism and their ACIDidty takes care of the heavy lifting required to ensure stability of extensive database systems. This very same ACIDity however, takes its toll on the performance of the DBMS, since every operation needs to be completed ensuring every single one of the ACID principles are complied with. This problem becomes especially exacerbated, when dealing with distributed database implementations, present concurently on multiple systems [CASSANDRA]. To deal with this problem, a special protocol called \textbf{"two-phase commit protocol"} was invented. When using this protocol, a special coordinator mediates between the user and every system that the database consists of. It first sends the query to every DBMS participating in the distributed network, waits until every single one of these participants finishes to execute the transaction up until the very last step where the transaction is "commited" to the database (hence the name). If every single one of these members executes the transaction successfully, it sends a all clear signal to every subsystem and allows them to finalize the transaction, if anything goes wrong in either system, the coordinator ensures that the transaction is canceled everywhere [2PC]. Unfortunetaly, since this 2PC locks every resource the transaction uses and extends the time needed to complete an operation, it is only really useful in tiny operations that can complete very quickly without compromising the responsiveness of the entire system, which is not always the case and is one of the reasons why you may not always want to ensure the ACIDity of every single operation [CASSANDRA].
+\par Another problem with RDBMS is the traditional structure of SQL based database schemas. They require the user to store data in rigid tables, that often necessitate the use of special tables representing various relationships such as one-to-many, many-to-many or one-to-one. This model only makes complex queries even harder to compose and interpret by a human, and makes complex database schemas especially difficult to read. Also, in many cases it is extremely challenging to design a database schema that acurately represents the necessary data, while complying with the RDBMS model [CASSANDRA].
+\par In summary, while excellent in many general cases, certain DBMS implementations may require to go beyond the constraints of the SQL model. These SQL-defying database solutions began to be called NoSQL or "Not only SQL" [SQLvNOSQL].
+
+\subsection{Cassandra}
+\label{subsec:background:second_section:first_subsection}
+\begin{center}
+''Apache Cassandra is an open source, distributed, decentralized, elastically scalable, highly available, fault-tolerant, tuneably consistent, row-oriented database that bases its distribution design on Amazon's Dynamo and its data model on Google's Bigtable. Created at Facebook, it is now used at some of the most popular sites on the Web''
+\par - Cassandra: The Definitive Guide: Distributed Data at Web Scale, Jeff Carpenter, Eben Hewitt
+\end{center}
 
 \subsection{MongoDB}
-\label{subsec:background:first_subsection}
-MongoDB is an excellent example of the NoSQL database design paradigm, moving away from the relational database model, in favor of document-oriented one \citep{mongoDB}. Instead of rows, MongoDB introduces documents - loose collections of data representant of how modern object-oriented programmers organize their data. MongoDB databases are much more flexible and easier to add data to and expirement in, thanks to MongoDB not requiring a fixed schema for all documents inside of one data collection.
-MongoDB is also excellent for large databases that often have to be spread across several machines to be scaleable - the MongoDB engine automatically handles balancing documents across various machines in a single cluster. 
+\label{subsec:background:second_section:second_subsection}
+\par MongoDB is an excellent example of the NoSQL database design paradigm, moving away from the relational database model, in favor of document-oriented one \citep{mongoDB}. Instead of rows, MongoDB introduces documents - loose collections of data representant of how modern object-oriented programmers organize their data. MongoDB databases are much more flexible and easier to add data to and expirement in, thanks to MongoDB not requiring a fixed schema for all documents inside of one data collection.
+%
+\par MongoDB is also excellent for large databases that often have to be spread across several machines to be scaleable - the MongoDB engine automatically handles balancing documents across various machines in a single cluster. 
 
-MongoDB documents are ordered sets of key-value pairs, simmilar to dictionaries or maps known from conventional programming languages. These documents are represented using the JSON standard, making them very intuitive to expirenced programmers. These documents are grouped in collections, analogous to SQL's tables. 
+\par MongoDB documents are ordered sets of key-value pairs, simmilar to dictionaries or maps known from conventional programming languages. These documents are represented using the JSON standard, making them very intuitive to expirenced programmers. These documents are grouped in collections, analogous to SQL's tables. 
 
-MongoDB's interface is a fully featured javascript interpreter, giving the user the flexibility of the entire JS language complete with its standard libraries. Queries, inserts, deletions and modifications to the data can be done via MongoDB's javascript compatible API.
+\par MongoDB's interface is a fully featured javascript interpreter, giving the user the flexibility of the entire JS language complete with its standard libraries. Queries, inserts, deletions and modifications to the data can be done via MongoDB's javascript compatible API.
 
 \subsection{Prometheus}
-\label{subsec:background:second_section:second_subsection}
-Prometheus is an implementation of another famous NoSQL approach - the time series database. It specificaly collects data as a series of key/value pairs and timestamps representing the time data was gathered. Usually this data, often called samples, is collected periodically from the same source. 
-Time series databases are an excellent way to store large amounts of data in a very short period of time, they store data very efficiently and help save calculation costs.
+\label{subsec:background:second_section:thrid_subsection}
+\par Prometheus is an implementation of another famous NoSQL approach - the time series database. It specificaly collects data as a series of key/value pairs and timestamps representing the time data was gathered. Usually this data, often called samples, is collected periodically from the same source. 
+\par Time series databases are an excellent way to store large amounts of data in a very short period of time, they store data very efficiently and help save calculation costs.
