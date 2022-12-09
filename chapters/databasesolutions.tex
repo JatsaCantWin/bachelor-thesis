@@ -52,14 +52,20 @@
 
 \subsection{Cassandra}
 \label{subsec:background:second_section:first_subsection}
-\begin{center}
-''Apache Cassandra is an open source, distributed, decentralized, elastically scalable, highly available, fault-tolerant, tuneably consistent, row-oriented database that bases its distribution design on Amazon's Dynamo and its data model on Google's Bigtable. Created at Facebook, it is now used at some of the most popular sites on the Web''
-\par - Cassandra: The Definitive Guide: Distributed Data at Web Scale, Jeff Carpenter, Eben Hewitt
-\end{center}
+\par Cassandra is a DBMS, designed with scalibility and ease of access in mind. Because of its exceptional ability to hold a large amount of data and process lots of writes, it is often used in real-time applications, such as financial software or, more interestingly for our purposes, hardware sensors [CassandraUseCase]. 
+\par Cassandra is designed to work on multiple systems or \textbf{"nodes"}, working in large groups called \textbf{"clusters"}. These clusters are also sometimes called rings, since they connect each node they consist of into ring-like structures. Every node contains its own copy of the data and can interact with users. A peer-to-peer protocol allows nodes to communicate and synchronize their data. This system also has a unique advantage in terms of data durability - a single node failure will not disrupt the operation of the entire database - neither will it compromise the data gathered by the failed node, since it most likely would have already been sent to another, functioning node [CASSANDRA].
+\par Cassandra favours data availibility over data consistency. Generally in different DBMS, we can describe data consistency in three categories:
+\begin{description}
+  \item [Strict Consistency], usually found in single threaded systems running a single node database. In this system, requests are always processed sequentialy, so reading outdated data is impossible.
+  \item [Casual Consistency], tries to determine how operations relate to one another, and only executes operations if their related proceeding operations have already been processed.
+  \item [Weak Consistency], sometimes called eventual consistency, is the type of consistency Cassandra favors. It means that data is allowed to be read, even if it may have been overwritten by a yet not processed operation. The data will eventually be propagated to be consistent throughout the whole database, but that may take some time.
+\end{description}
+\par Cassandra uses the last, seemingly worst type of consistency checking, since the first one is antithetical to the design philosophy of a clustered database such as Cassandra, and the second approach would hamper data availibility, which takes precedence over consistency in Cassandra [CASSANDRA].
+\par Cassandra offers a lot more relaxed approach to desining data models. SQL-like data rows are stored in so-called \textbf{"column famillies"}, roughly eqivalent to SQL tables. A single row in a column familly, however, has the ability to store as many or as little columns as necessary, unlike SQL Tables, which have to have the same amount of columns per row in every single row, thus creating a rectangle-like structure. A single cassandra column also has the ability to become a super column, and carry multiple other columns of any type inside itself. This feature eliminates the need to create relational tables, known from Relational DBMS.
 
 \subsection{MongoDB}
 \label{subsec:background:second_section:second_subsection}
-\par MongoDB is an excellent example of the NoSQL database design paradigm, moving away from the relational database model, in favor of document-oriented one \citep{mongoDB}. Instead of rows, MongoDB introduces documents - loose collections of data representant of how modern object-oriented programmers organize their data. MongoDB databases are much more flexible and easier to add data to and expirement in, thanks to MongoDB not requiring a fixed schema for all documents inside of one data collection.
+\par MongoDB is another good example of the NoSQL database design paradigm, moving away from the relational database model, in favor of document-oriented one \citep{mongoDB}. Instead of rows, MongoDB introduces documents - loose collections of data representant of how modern object-oriented programmers organize their data. MongoDB databases are much more flexible and easier to add data to and expirement in, thanks to MongoDB not requiring a fixed schema for all documents inside of one data collection.
 %
 \par MongoDB is also excellent for large databases that often have to be spread across several machines to be scaleable - the MongoDB engine automatically handles balancing documents across various machines in a single cluster. 
 
