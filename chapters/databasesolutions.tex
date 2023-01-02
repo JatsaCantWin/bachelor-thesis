@@ -1,6 +1,6 @@
-\chapter{Database Solutions}
+\chapter{Database Management Systems}
 \label{ch:background}
-\par There are numerous distinct database solutions available on the market already, each boasting its unique characteristics and design philosophy. Computer Scientists generally classify DBMS into two categories:
+\par There are numerous distinct database solutions available on the market already, each boasting its unique characteristics and design philosophy. These DBMSs (Database Management Systems) can be classified into these two categories:
 \begin{description}
   \item[SQL databases] based on a relational model, their engines implement some dialect of the SQL language.
   \item[NoSQL databases] a term used to describe various other database solutions that rely on documents, graphs, key-value pairs, or other structures to organize their data, rather than the relational model endorsed by SQL\citep{SQLvNOSQL}.
@@ -8,7 +8,6 @@
 
 \par Generally, NoSQL DBMSs compromise data consistency in favor of data availability and speed of data processing.
 
-%
 \section{SQL}
 \label{sec:background:first_section}
 \par Structured Query Language (SQL) is a collection of various languages used to define the interaction between the user and the database engine. Initially developed in the 70s at IBM, it gained popularity and dominated the Relation Database Management System market\citep{SQLHandbook}.
@@ -30,17 +29,14 @@
 \end{description}
 \par Implementation of these properties ensures stability and Consistency, often required in many database instances. The payoff, however, is the increased amount of computations needed to perform basic operations since every operation needs certain checks and data analyses to conform to these principles.
 
-%
 \subsection{SQLite}
 \label{subsec:background:first_seciton:first_subsection}
 \par In comparison with the rest of SQL-based solutions, SQLite is unique in that it does not come with an engine that is constantly running and waiting for users to connect and issue queries. Rather than that, SQLite stores its data in a simple file stored on a hard drive that can then be accessed by various SQLite-compatible applications that can open, read and modify the file according to the SQL standard and then close the file\citep{OwensSQLite}.
-
 \par Because of its quirks, SQLite lacks in the speed of reading and writing data. It also allows only one application to access and modify the contents of its database. Its strength, however, lies in its lightness, simplicity, and low resource intensity. It is an excellent data storage solution for simple apps, especially on mobile devices, since they can rarely afford an online-only database or constant access to a database hosted on a remote network. It can also find great use in databases that act as buffers or temporary storage for other, larger systems\citep{OwensSQLite}.
 
 \subsection{PostgresSQL}
 \label{subsec:background:first_section:second_subsection}
 \par PostgresSQL is one of the most popular open-source implementations of the SQL paradigm\citep{worsleyPostgresSQL}. It also includes its own programming language, PL/pgSQL, used to create advanced procedures and to include external scripts from other languages usually not associated with relational databases, such as Perl or Python. 
-
 \par PostgresSQL expands on the standard relational model of the SQL language by introducing the concept of objects, inheritance, and arrays, known from conventional programming languages. The user can now store multiple values in a single column, create child-parent relationships between tables and even create complex programs that SQL statements can invoke. In this so-called object-relational model, tables are sometimes called objects, and columns are called properties of said objects\citep{ACID}.
 
 \section{NoSQL}
@@ -58,22 +54,24 @@
 \begin{description}
   \item [Strict Consistency], is usually found in single-threaded systems running a single-node database. In this system, requests are always processed sequentially, so reading outdated data is impossible.
   \item [Casual Consistency], tries to determine how operations relate to one another and only executes operations if their related proceeding operations have already been processed.
-  \item [Weak Consistency], sometimes called eventual Consistency, is the type of Consistency Cassandra favors. It means that data can be read, even if a yet not processed operation may have overwritten it. The data will eventually be propagated to be consistent throughout the database, but that may take some time.
+  \item [Weak Consistency], sometimes called eventual Consistency, is the type of Consistency Cassandra favors. It means that data can be read, even if a yet not processed operation may have overwritten it. The data will eventually be propagated to be consistent throughout the database, but that may take some time. 
 \end{description}
-\par Cassandra uses the last, seemingly worst type of Consistency checking since the first one is antithetical to the design philosophy of a clustered database such as Cassandra, and the second approach would hamper data availability, which takes precedence over Consistency in Cassandra\citep{HewittCassandra}.
+\par Cassandra uses the last, seemingly worst type of Consistency checking since the first one is antithetical to the design philosophy of a clustered database such as Cassandra, and the second approach would hamper data availability, which takes precedence over Consistency in Cassandra. Furthermore, it is possible to select a level of Consistency by tuning the number of nodes that the data managed to propagate to before accepting the operation as completed. \citep{HewittCassandra}.
 \par Cassandra offers a lot more relaxed approach to designing data models. SQL-like data rows are stored in so-called \textbf{"column families"}, roughly equivalent to SQL tables. A single row in a column family, however, can store as many or as few columns as necessary, unlike SQL Tables, which have to have the same amount of columns per row in every single row, thus creating a rectangle-like structure. A single Cassandra column also can become a super column and carry multiple other columns of any type inside itself. This feature eliminates the need to create relational tables, known from Relational DBMS\citep{HewittCassandra}.
+\par Cassandra has its own query language, the CQL (Cassandra Query Langauge). It is very similar to SQL, although it does not include any elements related to transactions or constraints since those do not feature in Cassandra. \citep{CQL}
 
 \subsection{MongoDB}
 \label{subsec:background:second_section:second_subsection}
 \par MongoDB is another good example of the NoSQL database design paradigm, moving away from the relational database model in favor of a document-oriented one \citep{mongoDB}. Instead of rows, MongoDB introduces documents - loose collections of data representative of how modern object-oriented programmers organize their data. MongoDB databases are much more flexible and easier to add data to and experiment with, thanks to MongoDB not requiring a fixed schema for all documents inside one data collection.
-%
 \par MongoDB is also excellent for large databases that often have to be spread across several machines to be scaleable - the MongoDB engine automatically handles balancing documents across various machines in a single cluster\citep{mongoDB}. 
-
-\par MongoDB documents are ordered sets of key-value pairs, similar to dictionaries or maps are known from conventional programming languages. These documents are represented using the JSON standard, making them intuitive to experienced programmers. These documents are grouped in collections, analogous to SQL's tables\citep{mongoDB}. 
-
-\par MongoDB's interface is a fully featured javascript interpreter, giving the user the flexibility of the entire JS language with its standard libraries. Queries, inserts, deletions, and modifications to the data can be done via MongoDB's javascript-compatible API\citep{mongoDB}.
+\par Documents used by MongoDB are ordered sets of key-value pairs, similar to dictionaries or maps, known from conventional programming languages. These documents are represented using the JSON standard, making them intuitive to experienced programmers. These documents are grouped in collections, analogous to SQL's tables\citep{mongoDB}. Unlike SQL tables, this system is much more flexible, allowing one to implement all data relationships without creating special collections. This system does require more logic to be implemented on the application side, though, since it will not check the Consistency of the schema like SQL does\citep{MongovMySQL}.
+\par This DBMS's interface is a fully featured javascript interpreter, giving the user the flexibility of the entire JS language with its standard libraries. Queries, inserts, deletions, and modifications to the data can be done via MongoDB's javascript-compatible API\citep{mongoDB}.
+\par MongoDB's write system is asynchronous, meaning an operation that modifies or creates data inside a database does not need to be completed before issuing another operation. While this improves database performance, it significantly reduces reliability and Consistency\citep{MongovMySQL}.
+\par MongoDB features a unique query language, the MQL (MongoDB Query Language). The JSON used to represent documents is also used to perform specific queries, create, update, read and delete data, and more complex queries using the aggregate mechanism. 
 
 \subsection{Prometheus}
 \label{subsec:background:second_section:thrid_subsection}
-\par Prometheus is an implementation of another famous NoSQL approach - the time series database. It specifically collects data as a series of key/value pairs and timestamps representing the time data was gathered. Usually, this data, often called samples, is collected periodically from the same source. 
-\par Time series databases are an excellent way to quickly store large amounts of data. They store data very efficiently and help save calculation costs\citep{PrometheusCloud}.
+\par Sensors and other IoT applications can be challenging for traditional RDBMSs. These systems usually cannot handle large amounts of increasingly growing data in monitoring systems. A series of hacks can be used on RDBMSs to optimize them for these conditions. However, these measures may not be enough for long\citep{timeseries}. Since these monitoring systems usually have some things in common: a timestamp attached to all data, lots of writes being issued periodically, and most of the queries being very simple, a new type of a NoSQL database has been invented - a time series database, tailored explicitly around these constraints. 
+\par One famous implementation of this paradigm is a TSDBMS called Prometheus. It uses a unique pull-based data acquisition model, which periodically asks its clients to provide data rather than wait for them to provide it themselves. This model can prove beneficial since it is easier to monitor the stability of communication with each database client this way and quickly start monitoring additional targets. \citep{prometheusFAQ}. If one prefers the push-based model, this constraint can be overcome by using a second module called a Pushgateway, which accepts data from clients whenever they decide to push it and then provides it to Prometheus using the pull-based model. \citep{prometheusPushing/}
+Communication with Prometheus is facilitated over the HTTP protocol. The Prometheus database provides easy access to users or external APIs to query data or receive alerts - special notifications triggered when a specific condition is met. \citep{prometheusFAQ}
+\par Prometheus provides a rich query language of its own, the PromQL (Prometheus Query Language), which is much different from its relational equivalent. It can easily retrieve specific data and excels in analytics, featuring many functions useful in monitoring and processing gathered data. PromQL can also be used to set up alters, which, similar to triggers, execute every time data is gathered and can be used to detect specific patterns or undesirable values among the data. \citep{PromQL}

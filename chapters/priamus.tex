@@ -1,0 +1,57 @@
+\chapter{Priamus - a database data converter}
+\label{ch:background}
+\par In order to test the applicability of various database solutions along with their quirks, it is first vital to set up an instance of each of these DBMSs and inject them with the provided data. A C++ application dubbed Priamus, after the father of the mythical Cassandra, was written to quicken the often repeated process of moving data through various DBMSs. It only handles data gathered from SQLite and provided to Cassandra and MongoDB. Moving data the other way around was not needed, transferring data between SQLite and PostgreSQL is very easy in and of itself since both use the same query language, and Prometheus uses a vastly different model that requires manual handling. This program can easily be extended due to its use of the object-oriented programming paradigm.
+
+\section{Objects Implemented}
+\label{sec:background:first_section}
+\par The Priamus source code comprises two types of classes - the database connection classes and data storage classes. Each connection class establishes a connection to a specific database. Their Interface allows the user to gather all data stored in that particular database into the primary storage class called a "Table" or move all data stored in a list of such tables to that database.
+
+\subsection{Table}
+
+\lstinputlisting[language=C++, caption=Table.h]{src/Table.h}
+\lstinputlisting[language=C++, caption=Table.cpp]{src/Table.cpp}
+
+\par Tables represent the basic data structure of RDBMSs. Storing every type of data as SQL tables is beneficial since these types of DBMSs are the most restrictive in their schema. Currently, Priamus does not support handling triggers, stored functions, or keys since no such mechanisms were needed, although implementing those could be possible in the future. The "getName()" method returns the name of the table. Each table comprises components for storing data called Columns. It is possible to access those through the "getColumns()" and "addColumn()" methods. The "getData()," "getDataCassandra()," and "addCell()" methods allow access to even more deeply nested and smaller units of data storage called Cells, each representing a basic unit of data along with its type. The "getDataCassandra()" method is a special implementation of the "getData()" method that formats data in a way compatible with Cassandra.
+
+\subsection{Column}
+
+\lstinputlisting[language=C++, caption=Column.h]{src/Column.h}
+\lstinputlisting[language=C++, caption=Column.cpp]{src/Column.cpp}
+
+\par A Column is a very simple data type representing a single table column. It contains data storage units called cells and allows access to them through the "getCells()" and "addCell()" methods. It also implements a "getName()" method that returns the name of that particular column.
+
+\subsection{Cell}
+
+\lstinputlisting[language=C++, caption=Cell.h]{src/Cell.h}
+\lstinputlisting[language=C++, caption=Cell.cpp]{src/Cell.cpp}
+
+\par Cells represent an atomic unit of data and contain a string of data and an enumerated value that specifies the data type. Providing a separate data type for each Cell instead of the whole column is a break from SQL standards but allows handling even more varied database schemas. A generic "getData()" method returns a single string that can be used to insert correctly formatted data into most databases. A database that requires different formatting of data must have an independent version of that method implemented, as is the case with the "getDataCassandra()" method. Every database must also have a different method to get a string that returns the name of the Cell's datatype complaint with that database's query language syntax. An example of such a method is the "getDataTypeCassandra()" method. 
+\par Cells cannot be created using a simple constructor. Static methods such as "createFromSQLite()" are used to create a Cell instance using information from various databases to generate the necessary data to define a single cell.
+
+\subsection{IDatabaseConnector}
+
+\lstinputlisting[language=C++, caption=IDatabaseConnector.h]{src/IDatabaseConnector.h}
+
+\par IDatabaseConnector is an interface that defines the fundamental behavior of each database connection. They should be able to scrape every table or equivalent from a given database and insert a list of tables into it. In reality, the "insertTables()" method was only implemented for Cassandra and MongoDB, while the "getAllTables()" method has only been implemented for SQLite().
+
+\subsection{SQLiteConnector}
+
+\lstinputlisting[language=C++, caption=SQLiteConnector.h]{src/SQLiteConnector.h}
+\lstinputlisting[language=C++, caption=SQLiteConnector.cpp]{src/SQLiteConnector.cpp}
+
+\par The "executeSQL()" method is a wrapper function that allows access to executing SQL Queries. It may return a temporary Table representing the result of said query.
+\par The "getTableNames()" query gets the name of every table inside the database by gathering them from an SQLite-specific table called sqlite\_master. The "getTable()" method gathers info on all columns included in the table by executing the "PRAGMA TABLE INFO()" SQL function, prepares a table based on data collected this way and fills it with information taken directly from a given table. The "getAllTables()" method combines both and iterates through a list of all tables included inside a database, adding them to a vector that is then returned. 
+
+\subsection{CassandraConnector}
+
+\lstinputlisting[language=C++, caption=CassandraConnector.h]{src/CassandraConnector.h}
+\lstinputlisting[language=C++, caption=CassandraConnector.cpp]{src/CassandraConnector.cpp}
+
+\par Upon connection, CassandraConnector prepares a keyspace it will work in. The "executeStatement()" method is similar to SQLiteConnector's "executeSQL()" method, this one executing CQL queries. The "insertTable()" method first prepares a "CREATE TABLE" query that is going to create a basic Cassandra data structure that is then filled with rows of data. The "insertTables()" method iterates over a list of tables it was given and inserts them using the previous method, one by one.
+
+\subsection{MongoDBConnector}
+
+\lstinputlisting[language=C++, caption=MongoDBConnector.h]{src/MongoDBConnector.h}
+\lstinputlisting[language=C++, caption=MongoDBConnector.cpp]{src/MongoDBConnector.cpp}
+
+\par MongoDBConnector works very similarly to the previous class implementation. The main difference is its use of BSON, or Binary JSON structures, to represent JSON documents. The "insertDocument()" method is more specialized than its counterpart in the SQLiteConnector and CassandraConnector objects. It can only insert a single document into a collection inside the database. The "insertTable()" method prepares each document for insertion and then sends them to the database.
