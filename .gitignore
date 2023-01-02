@@ -224,3 +224,7 @@ TSWLatexianTemp*
 # any other stuff
 *.swp
 *.sic
+
+# database
+*.csv
+*.db
