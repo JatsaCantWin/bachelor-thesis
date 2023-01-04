@@ -56,20 +56,20 @@
 
 \subsection{CRUD operations performing objects}
 \par A python class was written for each considered DBMS to connect to these databases and perform basic operations on stored data. Every Class implementing this Interface must introduce four methods, each representing one of the four CRUD operations. Each of these methods must take two arguments: the amount of data created, read, updated, or deleted in a transaction or a batch operation and the number of transactions or batch operations performed. The Interface also defines a "reset()" operation that wipes leftover data from the database in preparation for performing the analysis and a "getName()" method that returns the name of the DBMS it performs the operations on, applicable when drawing charts.
-\lstinputlisting[language=Python, caption=DatabaseTestingInterface]{src/DatabaseTestingInterface}
+\lstinputlisting[language=Python, caption=DatabaseTestingInterface.py]{src/DatabaseTestingInterface.py}
 \par While not included inside the Interface definition, every database connection object should also define a constructor that establishes a connection with the database and processes external CSV files into data used in CRUD operations. They should also define a destructor that would finally sever the connection to the database upon the object's destruction. They also usually implement methods that help create necessary data storage structures, like tables or collections.
-\lstinputlisting[language=Python, caption=SQLiteDatabaseTesting]{src/SQLiteDatabaseTesting}
+\lstinputlisting[language=Python, caption=SQLiteDatabaseTesting.py]{src/SQLiteDatabaseTesting.py}
 \par The default SQLite interface is used to implement this Class. The constructor stores the connection to the database file, whose path was provided during the object's construction, and processes external CSV data into a dictionary containing lists of data values for each table separately. 
 \par The structure of the tables that will contain these data entries is hardcoded because every data type is organized in a similar way.
-\lstinputlisting[language=Python, caption=PostgresDatabaseTesting]{src/PostgreSQLDatabaseTesting}
+\lstinputlisting[language=Python, caption=PostgresDatabaseTesting.py]{src/PostgreSQLDatabaseTesting.py}
 \par The PostgreSQL implementation is very similar to the SQLite implementation since the PostgreSQL handling library "psycopg2" uses the same basic syntax as the sqlite3 library. The main difference is in the structure of the connection string - while SQLite requires the path to the location of the database on disk, PostgreSQL needs a string of data that defines the IP address of the DBMS service, the database name, the user name, and password. 
-\lstinputlisting[language=Python, caption=CassandraDatabaseTesting]{src/CassandraDatabaseTesting}
+\lstinputlisting[language=Python, caption=CassandraDatabaseTesting.py]{src/CassandraDatabaseTesting.py}
 \par The Cassandra version of this Class is also very similar to its SQL counterparts due to CQL's resemblance to SQL. The lack of transactions in Cassandra causes the main difference in implementation. Instead, the BatchStatement mechanism was used to perform multiple operations at once.
-\lstinputlisting[language=Python, caption=MongoDatabaseTesting]{src/MongoDatabaseTesting}
+\lstinputlisting[language=Python, caption=MongoDatabaseTesting.py]{src/MongoDatabaseTesting.py}
 \par The main difference in the MongoDB implementation is the use of documents to define data. There are no columns in document collections, so each document has to define the schema separately. The pymongo driver is also sensitive to the python data type of variables included in the document. Because of that, a method converting strings into timestamps was also defined within the Class.
 \subsection{Evaluating performance}
 \par A DatabaseTester Class was written to utilize these connection objects to measure the execution time of each operation. 
-\lstinputlisting[language=Python, caption=DatabaseTester]{src/DatabaseTester}
+\lstinputlisting[language=Python, caption=DatabaseTester.py]{src/DatabaseTester.py}
 \par The constructor of this object requires providing a list of DatabaseCRUDConnection objects that will be used when performing the analysis. The "executionTimeTable" field provides storage for analysis results. There are four methods used to measure the execution time of basic CRUD operations. Each of these four methods requires two arguments: the number of records to be operated on and the number of transactions/batch operations used to perform said operations. The operation execution time is measured using the timeit library, and the result is recorded in the appropriate place inside the "executionTimeTable" field. The "drawGraphs()" method draws bar charts based on data stored inside the "executionTimeTable()" field.
 \par This code was used to perform a performance analysis, with all database instances initiated on the same local machine, using docker virtualization. 
 \begin{figure}[htbp]
@@ -93,5 +93,6 @@
  \caption{Time elapsed while deleting a 1000 records}
 \end{figure}
 \par Data for Cassandra's batch read queries was not measured, since the amount of information downloaded, quickly overwhelmed the maximum size of a batch operation permited by Cassandra.
-\par The results suggest that database performance can be improved by sending data in batches. If lower-performing database equipment struggles to meet the demands of a large Energy Cluster, it may thus collect data at longer intervals.
+\par The results suggest that database performance can usually be improved, in many cases considerably, by sending data in batches. If lower-performing database equipment struggles to meet the demands of a large Energy Cluster, it may thus collect data at longer intervals.
+\par PostgreSQL, because of its complexity, was significantly less performant than other DBMSs. Such is the price for checking consistency and its robust data analytics, and constraint system.
 \par Because of its paradigm's uniqueness, it was impossible to compare Prometheus to other databases. Prometheus does include the option to tune the data-scraping interval. Prometheus has been proven to handle large amounts of data inserts every second, enough to satisfy the needs of the largest Energy Clusters. \citep{prometheusSoundcloud}
